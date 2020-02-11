@@ -30,10 +30,10 @@ GROUP BY last_name
 ORDER BY count(*);
 
 #7
-select first_name, count(*)
+SELECT gender, count(*)
 FROM employees
-WHERE first_name in ('Irena', 'Vidya', 'Maya')
-GROUP BY first_name
+WHERE first_name IN ('Irena', 'Vidya', 'Maya')
+GROUP BY gender
 ORDER BY gender;
 
 #8
@@ -49,3 +49,17 @@ SELECT
 	FROM employees
     GROUP BY username
 	LIMIT 10;
+
+      #8 bonus
+  SELECT
+	LOWER(
+	CONCAT(
+		LEFT(first_name, 1),
+		LEFT(last_name, 4),
+		"_", 
+		SUBSTRING(birth_date, 6, 2), 
+		SUBSTRING(birth_date, 3, 2))) AS username,
+	count(*)
+	FROM employees
+    GROUP BY username
+    HAVING count(*) > 1;
