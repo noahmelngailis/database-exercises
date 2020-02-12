@@ -76,12 +76,61 @@ Use employees;
  WHERE YEAR(salaries.to_date) = '9999' AND YEAR(dept_manager.to_date) = '9999';
 
  #6 
- SELECT 
- employees_with_departments.dept_no,
+  SELECT 
+dept_emp.dept_no,
  departments.dept_name,
- count(employees_with_departments.dept_no) AS num_employees
- FROM employees_with_departments
- JOIN departments ON employees_with_departments.dept_no = departments.dept_no
- JOIN dept_emp ON dept_emp.dept_no = employees_with_departments.dept_no
+ count(dept_emp.dept_no) AS num_employees
+ FROM dept_emp
+ JOIN departments ON dept_emp.dept_no = departments.dept_no
  WHERE YEAR(dept_emp.to_date) LIKE '9999'
- GROUP BY dept_no;
+ GROUP BY dept_emp.dept_no
+ LIMIT 1000;
+#7
+SELECT 
+departments.dept_name,
+AVG(salaries.salary) as average_salary
+FROM dept_emp
+JOIN salaries ON salaries.emp_no = dept_emp.emp_no
+JOIN departments ON dept_emp.dept_no = departments.dept_no
+WHERE YEAR(salaries.to_date) LIKE '9999' 
+AND YEAR(dept_emp.to_date) LIKE '9999'
+GROUP BY departments.dept_name
+ORDER BY average_salary DESC
+LIMIT 1;
+
+#8
+SELECT 
+first_name,
+last_name
+FROM employees_with_departments
+JOIN salaries ON salaries.emp_no = employees_with_departments.emp_no
+JOIN departments ON departments.dept_no = employees_with_departments.dept_no
+WHERE departments.dept_name LIKE 'Marketing' 
+ORDER BY salaries.salary DESC
+LIMIT 1;
+
+#9
+SELECT
+employees_with_departments.first_name,
+employees_with_departments.last_name,
+salaries.salary,
+departments.dept_name
+FROM employees_with_departments
+JOIN salaries ON salaries.emp_no = employees_with_departments.emp_no
+JOIN departments ON departments.dept_no = employees_with_departments.dept_no
+JOIN dept_manager ON dept_manager.emp_no = employees_with_departments.emp_no
+WHERE employees_with_departments.emp_no = dept_manager.emp_no AND YEAR(dept_manager.to_date) LIKE '9999'
+ORDER BY salaries.salary DESC
+LIMIT 1;
+
+#10
+SELECT
+first_name
+last_name
+dept_name
+dept_manager
+FROM employees AS emp
+JOIN dept_emp (using emp_no)
+JOIN dept_manager ON dept_manager.dept_no = dept_emp.dept_no
+JOIN departments  ON dept_emp.dept_no = departments.dept_no
+
