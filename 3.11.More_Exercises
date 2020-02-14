@@ -1,0 +1,33 @@
+
+--What languages are spoken in Santa Monica?
+
+SELECT LANGUAGE, Percentage 
+FROM countrylanguage
+WHERE CountryCode IN (
+	SELECT CountryCode
+	FROM city
+	WHERE NAME = "Santa Monica")
+ORDER BY Percentage;
+
+-- How many different countries are in each region?
+
+SELECT region Region, count(region) num_countries
+FROM country
+GROUP BY region 
+ORDER BY num_countries ASC;
+
+-- What is the population for each region?
+
+SELECT region Region, sum(population) `population`
+FROM country
+GROUP BY region
+ORDER BY `population`;
+
+-- What is the population for each continent?
+
+SELECT continent Continent, sum(population) population
+FROM country
+GROUP BY continent
+ORDER BY population DESC;
+
+What is the average life expectancy globally?
