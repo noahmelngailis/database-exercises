@@ -20,7 +20,7 @@ WHERE emp_no IN (
 GROUP BY title
 
 #3
-select *
+select count(*)
 FROM employees
 WHERE NOT emp_no IN (
     SELECT emp_no
@@ -42,22 +42,21 @@ AND gender LIKE 'F'
 #5
 SELECT first_name, last_name, s.salary
 FROM salaries s
-JOIN employees e ON s.emp_no AND e.emp_no
-WHERE salary > (SELECT AVG(salary)
-					FROM salaries)
-AND s.to_date > now()					
-LIMIT 5;
-
+JOIN employees USING (emp_no)
+WHERE salary > (
+	SELECT AVG(salary)
+	FROM salaries)
+AND s.to_date > now();		
 
 #6
 SELECT count(*)
 FROM salaries
 WHERE salary >
-(SELECT MAX(salary) - STD(salary) AS 1std
-FROM salaries)
-AND to_date > curdate();
+    (SELECT MAX(salary) - STD(salary) AS 1std
+    FROM salaries)
+    AND to_date > curdate();
 
-SELECT count(*) / (
+SELECT count(*) * 100 / (
 	SELECT count(*)
 	FROM salaries
 	WHERE to_date > curdate())
@@ -86,3 +85,40 @@ WHERE dept_no IN (
 			FROM dept_manager
 			WHERE to_date > now())))
 ;
+
+SELECT first_name, last_name
+FROM employees
+WHERE emp_no  = (
+	SELECT emp_no
+	FROM salaries 
+	WHERE  salary = (
+		SELECT max(salary)
+		FROM salaries
+		)
+	);
+
+SELECT first_name, last_name
+FROM employees
+WHERE emp_no  = (
+	SELECT emp_no
+	FROM salaries 
+	WHERE  salary = (
+		SELECT max(salary)
+		FROM salaries
+		)
+	);
+SELECT dept_name
+FROM departments
+WHERE dept_no = (
+    SELECT dept_no
+    FROM dept_emp
+    WHERE emp_no  = (
+        SELECT emp_no
+        FROM salaries 
+        WHERE  salary = (
+            SELECT max(salary)
+            FROM salaries
+            )
+        )
+    );
+

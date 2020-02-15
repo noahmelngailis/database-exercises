@@ -72,8 +72,9 @@ dept_emp.dept_no,
  count(dept_emp.dept_no) AS num_employees
  FROM dept_emp
  JOIN departments ON dept_emp.dept_no = departments.dept_no
- WHERE YEAR(dept_emp.to_date) LIKE '9999'
+ WHERE dept_emp.to_date > curdate()
  GROUP BY dept_emp.dept_no;
+
 
 #7
 SELECT 
@@ -95,7 +96,9 @@ last_name
 FROM employees_with_departments
 JOIN salaries ON salaries.emp_no = employees_with_departments.emp_no
 JOIN departments ON departments.dept_no = employees_with_departments.dept_no
-WHERE departments.dept_name LIKE 'Marketing' 
+WHERE departments.dept_name LIKE 'Marketing'
+AND salaries.to_date > curdate()
+AND dept_emp.to_date > curdate()
 ORDER BY salaries.salary DESC
 LIMIT 1;
 
@@ -129,4 +132,14 @@ WHERE YEAR(dept_emp.to_date) LIKE '9999'
 AND YEAR(dept_manager.to_date) LIKE '9999'
 AND YEAR(titles.to_date) LIKE '9999'
 AND YEAR(salaries.to_date) LIKE '9999';
+
+#11
+SELECT MAX(A.salary), A.dept_no
+FROM (
+    SELECT de.emp_no, de.dept_no, s.salary
+    FROM dept_emp de
+    JOIN salaries ON de.emp_no and s.emp_no
+    WHERE de.to_date > now() and s.to_date > now()
+) A
+GROUP BY A.dept_no;
 

@@ -42,4 +42,7 @@ first_name, last_name
 FROM employees
 WHERE hire_date BETWEEN '1990-01-01' AND '1999-12-31' 
 	AND birth_date LIKE '19%-12-25'
-ORDER BY hire_date DESC, birth_date DESC;
+ORDER BY birth_date ASC, hire_date DESC;
+
+
+
