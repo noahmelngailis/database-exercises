@@ -131,3 +131,42 @@ GROUP BY NAME;
 -- List each film and the number of actors
 --  who are listed for that film.
 
+SELECT title, count(actor_id)
+FROM film
+JOIN film_actor USING (film_id)
+GROUP BY title;
+
+-- How many copies of the film 
+-- Hunchback Impossible exist in the inventory system?
+
+SELECT title, count(*)
+FROM inventory
+JOIN film USING(film_id)
+WHERE title LIKE "HUNCHBACK IMPOSSIBLE"
+GROUP BY title;
+
+ -- The music of Queen and Kris Kristofferson 
+-- have seen an unlikely resurgence. As an unintended 
+-- consequence, films starting with the letters K and Q have
+--  also soared in popularity. Use subqueries to display the 
+--  titles of movies starting with the letters K and Q whose
+--   language is English.
+
+SELECT title
+FROM film
+JOIN sakila.language USING(language_id)
+WHERE language.name LIKE 'English' 
+AND (title LIKE 'k%'
+OR  title LIKE 'q%');
+
+-- Use subqueries to display all actors who appear in the film Alone Trip.
+
+SELECT *
+FROM actor
+WHERE actorid IN (
+	SELECT actor_id
+	FROM film_actor
+	WHERE film_id IN (
+		SELECT film_id
+	)
+	)
