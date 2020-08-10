@@ -39,3 +39,55 @@ AND to_date > curdate()
 
 
 -- Find all the employees who currently have a higher salary than the companies overall, historical average salary.
+SELECT first_name, last_name, salary
+FROM employees
+JOIN salaries using(emp_no)
+WHERE salary > (
+	SELECT AVG(salary)
+	FROM salaries
+)
+AND
+to_date > CURDATE();
+
+-- How many current salaries are within 1 standard deviation of the current highest salary?
+SELECT *
+FROM employees
+JOIN salaries USING(emp_no)
+WHERE salary > (
+	SELECT max(salary) - stddev(salary)
+	FROM salaries
+)
+-- Department names that currently have female managers
+SELECT dept_name
+FROM dept_manager
+JOIN employees USING (emp_no)
+JOIN departments USING (dept_no)
+WHERE to_date > curdate()
+AND gender = 'F'
+
+-- Find the first and last name of the employee with the highest salary.
+SELECT first_name, last_name
+FROM employees
+WHERE emp_no = (
+
+	SELECT emp_no
+	FROM salaries
+	WHERE to_date > curdate()
+	AND salary = (
+		SELECT max(salary)
+		FROM salaries)
+	)
+
+-- Find the department name that the employee with the highest salary works in.
+SELECT dept_name
+FROM departments
+JOIN dept_emp USING (dept_no)
+WHERE emp_no = (
+
+	SELECT emp_no
+	FROM salaries
+	WHERE to_date > curdate()
+	AND salary = (
+		SELECT max(salary)
+		FROM salaries)
+	)
