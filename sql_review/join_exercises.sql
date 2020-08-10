@@ -121,11 +121,34 @@ AND m.to_date > curdate()
 ORDER BY d.dept_name;
 
 -- Who is the highest paid employee within each department.
-SELECT e.first_name, e.last_name, d.dept_name, max(s.salary) AS max_salary
-FROM employees e 
-JOIN salaries s USING (emp_no)
+SELECT first_name, last_name, dept_name
+FROM employees
+JOIN dept_emp USING (emp_no)
+JOIN departments USING (dept_no)
+JOIN salaries USING (emp_no)
+WHERE salary = (
+
+	
+SELECT max(salary)
+FROM salaries s
+JOIN employees e USING(emp_no)
 JOIN dept_emp de USING (emp_no)
-JOIN departments d USING (dept_no)
-WHERE de.to_date > curdate()
-AND s.to_date > curdate()
-GROUP BY dept_name, first_name, last_name
+WHERE s.to_date > curdate()
+AND de.to_date > curdate()
+GROUP BY dept_no
+)
+
+SELECT first_name, last_name, dept_name
+FROM employees ee
+JOIN dept_emp ddee USING (emp_no)
+JOIN departments dd USING (dept_no)
+JOIN 
+	SELECT dept_no, max(salary)
+	FROM salaries s
+	JOIN employees e USING(emp_no)
+	JOIN dept_emp de USING (emp_no)
+	WHERE s.to_date > curdate()
+	AND de.to_date > curdate()
+	GROUP BY dept_no  
+	AS max_table
+ON max_table.dept_no = dd.dept_no
