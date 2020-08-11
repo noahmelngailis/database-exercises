@@ -62,3 +62,44 @@ FROM CITY
 SELECT sum(population)
 FROM city
 WHERE countrycode = "JPN"
+
+
+-- Query the difference between the maximum and minimum populations in CITY.
+SELECT max(population) - min(population)
+FROM city
+
+-- Query the sum of Northern Latitudes (LAT_N) from STATION having values greater than  and less than .
+SELECT TRUNCATE(SUM(LAT_N), 4)
+  FROM STATION
+ WHERE LAT_N BETWEEN 38.7880 AND 137.2345
+
+ -- Weather Observation Station 15
+ SELECT ROUND(LONG_W, 4)
+FROM STATION
+WHERE LAT_N = (
+    SELECT MAX(LAT_N)
+    FROM STATION
+    WHERE LAT_N < 137.2345)
+
+-- Weather Observation Station 16
+SELECT ROUND(LAT_N, 4)
+FROM STATION
+WHERE LAT_N = (
+    SELECT MIN(LAT_N)
+    FROM STATION
+    WHERE LAT_N < 38.7780)
+
+-- Weather Observation Station 17
+SELECT ROUND(LONG_W, 4)
+FROM STATION
+WHERE LAT_N = (
+    SELECT MIN(LAT_N)
+    FROM STATION
+    WHERE LAT_N < 38.7780)
+
+-- Weather Observation Station 18
+select round(abs(min(lat_n)-max(lat_n)) + abs(min(long_w)-max(long_w)), 4)
+FROM STATION
+
+-- Weather Observation Station 19
+Select round(sqrt(power((min(lat_n)-max(lat_n)),2) + power((min(long_w)-max(long_w)),2)),4) From station
