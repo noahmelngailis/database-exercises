@@ -103,3 +103,11 @@ FROM STATION
 
 -- Weather Observation Station 19
 Select round(sqrt(power((min(lat_n)-max(lat_n)),2) + power((min(long_w)-max(long_w)),2)),4) From station
+
+-- Draw The Triangle 1
+set @number = 21;
+select repeat('* ', @number := @number - 1) from information_schema.tables;
+
+-- Draw The Triangle 2
+set @row := 0;
+select repeat('* ', @row := @row + 1) from information_schema.tables where @row < 20
