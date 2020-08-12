@@ -111,3 +111,5 @@ select repeat('* ', @number := @number - 1) from information_schema.tables;
 -- Draw The Triangle 2
 set @row := 0;
 select repeat('* ', @row := @row + 1) from information_schema.tables where @row < 20
+
+-- Draw The Triangle 3
