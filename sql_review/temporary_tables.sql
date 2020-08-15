@@ -24,5 +24,16 @@ CREATE TABLE payment AS
 SELECT *
 FROM sakila.payment;
 
+
+ALTER TABLE payment
+MODIFY COLUMN amount DEC(6,2);
+
 UPDATE payment
-SET amount = cast(round(amount*100, 0) AS BIGINT)
+SET amount = round(amount*100, 0);
+
+ALTER TABLE payment
+MODIFY COLUMN amount INT;
+
+-- Find out how the current average pay in each department compares to the overall, historical average pay. 
+-- In order to make the comparison easier, you should use the Z-score for salaries. 
+-- In terms of salary, what is the best department right now to work for? The worst?
