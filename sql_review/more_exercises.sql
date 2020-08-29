@@ -66,3 +66,56 @@ SELECT NAME, LocalName,
 	IF (NAME = LocalName, FALSE, TRUE) AS is_named_dif
 FROM country
 WHERE NAME != LocalName
+
+
+-- Sakila Database
+USE sakila;
+
+-- Display the first and last names in all lowercase of all the actors.
+SELECT lower(first_name), lower(last_name)
+FROM actor;
+
+--You need to find the ID number, first name, and last name of an actor, of whom you know only the first name, "Joe." What is one query would you could use to obtain this information?
+
+SELECT first_name, last_name, actor_id
+FROM actor
+WHERE first_name LIKE "Joe" OR first_name LIKE "Joseph";
+
+-- Find all actors whose last name contain the letters "gen":
+SELECT first_name, last_name
+FROM actor
+WHERE last_name LIKE "%gen%";
+
+-- Find all actors whose last names contain the letters "li". This time, order the rows by last name and first name, in that order.
+SELECT first_name, last_name
+FROM actor
+WHERE last_name LIKE "%li%"
+ORDER BY last_name, first_name
+
+-- Use JOIN to display the first and last names, as well as the address, of each staff member.
+SELECT first_name, last_name, address, address2, district, postal_code
+FROM staff
+JOIN address USING (address_id);
+
+--Use JOIN to display the total amount rung up by each staff member in August of 2005.
+SELECT username, sum(amount) AS total
+FROM staff
+JOIN rental USING (staff_id)
+JOIN payment USING (rental_id)
+WHERE payment_date BETWEEN "2005-08-01" AND "2005-08-31"
+GROUP BY username;
+
+-- List each film and the number of actors who are listed for that film.
+SELECT title, count(title)
+FROM film
+JOIN film_actor USING (film_id)
+JOIN actor USING (actor_id)
+GROUP BY title;
+
+-- How many copies of the film Hunchback Impossible exist in the inventory system?
+SELECT title, count(title) AS inventory
+FROM film
+JOIN inventory USING (film_id)
+GROUP BY title
+
+-- The music of Queen and Kris Kristofferson have seen an unlikely resurgence. As an unintended consequence, films starting with the letters K and Q have also soared in popularity. Use subqueries to display the titles of movies starting with the letters K and Q whose language is English
